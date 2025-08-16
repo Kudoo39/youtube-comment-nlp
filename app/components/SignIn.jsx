@@ -9,7 +9,7 @@ const SignInButton = () => {
       <div className='absolute right-4 top-4'>
         <button
           onClick={() => signOut}
-          className='text-black bg-main-pink py-1 px-2 rounded-md border-2 border-black'
+          className='text-black bg-blue-100 hover:bg-blue-200 py-1 px-2 rounded-md border-2 border-black'
         >
           Sign Out
         </button>
