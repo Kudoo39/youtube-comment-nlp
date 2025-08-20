@@ -2,11 +2,17 @@
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import AppBar from './components/AppBar'
-import { getComment } from './action'
+import { getComment, getVideoDetails, getChannelDetails } from './action'
+import ChannelHeader from './components/ChannelHeader'
+import VideoHeader from './components/VideoHeader'
 
 export default function Home() {
   const { data: session } = useSession()
   const [videoUrl, setVideoUrl] = useState('')
+  const [isLoading, setLoading] = useState(false)
+  const [comments, setComments] = useState([])
+  const [channel, setChannel] = useState({})
+  const [video, setVideo] = useState({})
   const filterText = (inputText) => {
     const noEmoji = inputText.replace(/[\u{1F600}-\u{1F6FF}]/gu, '')
     const noSpecialChars = noEmoji.replace(/[^\p{L}\p{N}\s_]/gu, '')
@@ -21,11 +27,18 @@ export default function Home() {
     }
     const videoId = videoUrl.split('youtube.com/watch?v=')[1].split('&')[0]
 
+    setLoading(true)
     const data = await getComment(videoId)
+    const channelId = data[0].channelId
+    const videoData = await getVideoDetails(videoId)
+    const channelData = await getChannelDetails(channelId)
+    setChannel(channelData)
+    setVideo(videoData)
     const comment = data.map((item) => item.topLevelComment.snippet.textDisplay)
     let filteredComment = comment.map((item) => filterText(item))
-    console.log('Filtered Comments:', filteredComment)
-    console.log('Comments:', comment)
+    setComments(filteredComment)
+    setVideoUrl('')
+    setLoading(false)
     // if (session) {
     //   const data = await getComment(videoId)
     // } else {
@@ -35,10 +48,10 @@ export default function Home() {
   }
 
   return (
-    <main className='bg-main-grey flex flex-col min-h-screen text-black'>
+    <main className='bg-gray-200 flex flex-col min-h-screen text-black'>
       <AppBar />
       <div className='grid grid-cols-3 gap-4'>
-        <div className='bg-main-grey min-h-screen'>
+        <div className='bg-gray-200 min-h-screen'>
           <p className='m-4 text-[4rem] font-bold font-mono'>YVA</p>
           <p className='m-4 text-[1.5rem] font-normal font-mono'>
             YouTube Video Analysis
@@ -57,13 +70,25 @@ export default function Home() {
               onChange={(e) => setVideoUrl(e.target.value)}
               value={videoUrl}
             />
-            <button
-              className='m-4 p-2 bg-linear-to-bl from-violet-200 to-fuchsia-200 bg-linear-to-bl hover:from-violet-300 hover:to-fuchsia-300 rounded-lg border-2 border-black'
-              type='submit'
-            >
-              Submit
-            </button>
+            {isLoading ? (
+              <button className='m-4 p-2 w-17 bg-linear-to-bl from-violet-200 to-fuchsia-200 hover:from-violet-300 hover:to-fuchsia-300 rounded-lg border-2 border-black'>
+                ...
+              </button>
+            ) : (
+              <button
+                className='m-4 p-2 bg-linear-to-bl from-violet-200 to-fuchsia-200 hover:from-violet-300 hover:to-fuchsia-300 rounded-lg border-2 border-black'
+                type='submit'
+              >
+                Submit
+              </button>
+            )}
           </form>
+        </div>
+        <div className='min-h-screen col-span-2 bg-gradient-to-br from-pink-200'>
+          <div className='col-span-2'>
+            <ChannelHeader channel={channel} />
+            <VideoHeader video={video} />
+          </div>
         </div>
       </div>
     </main>
