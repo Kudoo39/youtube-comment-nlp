@@ -85,9 +85,11 @@ export default function Home() {
           </form>
         </div>
         <div className='min-h-screen col-span-2 bg-gradient-to-br from-pink-200'>
-          <div className='col-span-2'>
-            <ChannelHeader channel={channel} />
-            <VideoHeader video={video} />
+          <div className='grid grid-cols-3 border-2 border-black mt-16 ml-12 mr-24 rounded-md p-4 bg-white/60 backdrop-blur-md'>
+            <div className='col-span-2'>
+              <ChannelHeader channel={channel} />
+              <VideoHeader video={video} />
+            </div>
           </div>
         </div>
       </div>

@@ -5,7 +5,7 @@ const apiKey = process.env.API_KEY
 
 export async function getComment(videoId) {
   const apiUrl = 'https://www.googleapis.com/youtube/v3/commentThreads'
-  const url = `${apiUrl}?part=snippet&order=relevance&videoId=${videoId}&key=${apiKey}`
+  const url = `${apiUrl}?part=snippet&order=relevance&maxResults=10&videoId=${videoId}&key=${apiKey}`
 
   try {
     const response = await axios.get(url)
