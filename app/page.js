@@ -1,15 +1,19 @@
 'use client'
+import axios from 'axios'
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import AppBar from './components/AppBar'
 import { getComment, getVideoDetails, getChannelDetails } from './action'
 import ChannelHeader from './components/ChannelHeader'
 import VideoHeader from './components/VideoHeader'
+import Result from './components/Result'
+import Comments from './components/Comments'
 
 export default function Home() {
   const { data: session } = useSession()
   const [videoUrl, setVideoUrl] = useState('')
   const [isLoading, setLoading] = useState(false)
+  const [result, setResult] = useState(null)
   const [comments, setComments] = useState([])
   const [channel, setChannel] = useState({})
   const [video, setVideo] = useState({})
@@ -18,6 +22,19 @@ export default function Home() {
     const noSpecialChars = noEmoji.replace(/[^\p{L}\p{N}\s_]/gu, '')
 
     return noSpecialChars
+  }
+
+  const analyzeComment = async (comments) => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/analyze`,
+        {
+          comment_data: comments
+        }
+      )
+      const data = response.data
+      return data
+    } catch (error) {}
   }
 
   const handleSubmit = async (e) => {
@@ -36,7 +53,14 @@ export default function Home() {
     setVideo(videoData)
     const comment = data.map((item) => item.topLevelComment.snippet.textDisplay)
     let filteredComment = comment.map((item) => filterText(item))
+    filteredComment = filteredComment.filter((item) => item.length > 0)
     setComments(filteredComment)
+
+    if (filteredComment.length > 0) {
+      const result = await analyzeComment(filteredComment)
+      setResult(result)
+    }
+
     setVideoUrl('')
     setLoading(false)
     // if (session) {
@@ -90,6 +114,17 @@ export default function Home() {
               <ChannelHeader channel={channel} />
               <VideoHeader video={video} />
             </div>
+            <div>
+              <p className='font-mono font-bold text-[1.25rem]'>
+                Overall Emotions
+              </p>
+              <Result result={result} />
+            </div>
+          </div>
+
+          <div className='ml-12 mt-8'>
+            <p className='font-mono font-bold text-2xl '>Comment Analysis</p>
+            <Comments comments={comments} result={result} />
           </div>
         </div>
       </div>

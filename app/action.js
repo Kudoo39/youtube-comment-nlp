@@ -16,8 +16,8 @@ export async function getComment(videoId) {
     const data = response.data
     const snippet = data.items.map((item) => item.snippet)
 
-    console.log('Data:', data)
-    console.log('Snippet:', snippet)
+    // console.log('Data:', data)
+    // console.log('Snippet:', snippet)
     return snippet
   } catch (error) {}
 }
@@ -35,8 +35,8 @@ export async function getVideoDetails(videoId) {
     const data = response.data
     const snippet = data.items.map((item) => item.snippet)
 
-    console.log('Data:', data)
-    console.log('Snippet:', snippet)
+    // console.log('Data:', data)
+    // console.log('Snippet:', snippet)
     return snippet[0]
   } catch (error) {}
 }
@@ -54,8 +54,8 @@ export async function getChannelDetails(channelId) {
     const data = response.data
     const snippet = data.items.map((item) => item.snippet)
 
-    console.log('Data:', data)
-    console.log('Snippet:', snippet)
+    // console.log('Data:', data)
+    // console.log('Snippet:', snippet)
     return snippet[0]
   } catch (error) {}
 }

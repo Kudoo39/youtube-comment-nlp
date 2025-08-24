@@ -8,7 +8,7 @@ const ChannelHeader = ({ channel }) => {
         alt={channel?.title}
         className='w-12 h-12 object-contain rounded-[50%]'
       />
-      <p className='text-[1.5rem] font-bold'>{channel?.title}</p>
+      <p className='text-lg font-semibold text-gray-800'>{channel?.title}</p>
     </div>
   )
 }
