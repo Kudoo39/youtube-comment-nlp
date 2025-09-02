@@ -4,7 +4,7 @@ const VideoHeader = ({ video }) => {
   return (
     <div className='mt-12 ml-12 flex-col items-center gap-4'>
       <img
-        src={video?.thumbnails?.maxres.url}
+        src={video?.thumbnails?.maxres?.url || video?.thumbnails?.high?.url}
         alt={video?.title}
         className='object-cover w-[480px] rounded-xl shadow-md'
       />

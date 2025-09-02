@@ -17,7 +17,7 @@ const Comments = ({ comments, result }) => {
                 key={index}
                 className='px-3 py-1 text-sm rounded-full bg-gradient-to-r from-purple-300 to-blue-300 text-gray-800 font-semibold shadow-sm'
               >
-                {emotion.name}: {parseFloat(emotion.score).toFixed(2)}
+                {emotion.label}: {parseFloat(emotion.score).toFixed(2)}
               </span>
             ))}
           </div>
